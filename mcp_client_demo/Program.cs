@@ -65,33 +65,38 @@ namespace mcp_client_demo
                    new() { Tools = tools });
             Messages.AddMessages(response);
             var toolUseMessage = response.Messages.Where(m => m.Role == ChatRole.Tool);
-
-            if (toolUseMessage.Count() > 0)
+            if (response.Messages[0].Contents.Count > 1)
             {
-                var functionMessage = response.Messages.Where(m => m.Text == "").First();             
-                var functionCall = (FunctionCallContent)functionMessage.Contents[1];
+                //var functionMessage = response.Messages.Where(m => (m.Role == ChatRole.Assistant && m.Text == "")).Last();
+                var functionCall = (FunctionCallContent)response.Messages[0].Contents[1];
                 Console.ForegroundColor = ConsoleColor.Green;
                 string arguments = "";
-                foreach (var arg in functionCall.Arguments)
+                if (functionCall.Arguments != null)
                 {
-                    arguments += $"{arg.Key}:{arg.Value};";
-                }
-                Console.WriteLine($"调用函数名:{functionCall.Name};参数信息：{arguments}");
-                foreach (var message in toolUseMessage)
-                {
-                    var functionResultContent = (FunctionResultContent)message.Contents[0];
-                    Console.WriteLine($"调用工具结果：{functionResultContent.Result}");
-                }
+                    foreach (var arg in functionCall.Arguments)
+                    {
+                        arguments += $"{arg.Key}:{arg.Value};";
+                    }
+                    Console.WriteLine($"调用函数名:{functionCall.Name};参数信息：{arguments}");
+                    foreach (var message in toolUseMessage)
+                    {
+                        var functionResultContent = (FunctionResultContent)message.Contents[0];
+                        Console.WriteLine($"调用工具结果：{functionResultContent.Result}");
+                    }
 
-                Console.ForegroundColor = ConsoleColor.White;
+                    Console.ForegroundColor = ConsoleColor.White;
+                }
+                else
+                {
+                    Console.WriteLine("调用工具参数缺失");
+                }
             }
             else
             {
                 Console.ForegroundColor = ConsoleColor.Green;
-                Console.WriteLine("本次没有调用工具");
-                Console.ForegroundColor = ConsoleColor.White;
+                Console.WriteLine("本次没有调用工具");               
             }
-
+            Console.ForegroundColor = ConsoleColor.White;
             return response.Text;
         }
     }
