@@ -26,4 +26,10 @@ public partial class MainWindowViewModel : ViewModelBase
     {
         CurrentPage = new SettingsViewModel();
     }
+
+    [RelayCommand]
+    private void NavigateToMCPSettings()
+    {
+        CurrentPage = new MCPSettingsViewModel();
+    }
 }

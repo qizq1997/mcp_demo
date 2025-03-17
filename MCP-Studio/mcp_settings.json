@@ -1,0 +1,17 @@
+﻿{
+  "mcpServers": {   
+    "fetch": {
+      "command": "node",
+      "args": "D:/Learning/AI-related/fetch-mcp/dist/index.js"
+      
+    },
+    "duckduckgo_search": {
+      "command": "uv",
+      "args": "--directory D:\\Learning\\AI-related\\mcp-demo\\duckduckgo_mcp run main.py"   
+    },
+    "sqlite": {
+      "command": "uv",
+      "args": "--directory D:/Learning/AI-related/servers/src/sqlite run mcp-server-sqlite --db-path D:/Learning/AI-related/servers/src/sqlite/test.db"  
+    } 
+  }
+}
