@@ -1,0 +1,19 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+			 xmlns:materialIcons="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
+             xmlns:vm="using:MCP_Studio.ViewModels"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="MCP_Studio.Views.ChatView"
+             x:DataType="vm:ChatViewModel">
+    <Grid>
+        <TextBlock Text="Chat Page"
+                 FontSize="24"
+                 HorizontalAlignment="Center"
+                 VerticalAlignment="Center"/>
+		<!--<materialIcons:MaterialIcon Kind="Abacus" />-->
+		<!--<Button Content="{materialIcons:MaterialIconExt Kind=Abacus}" />-->
+		<Button Content="{materialIcons:MaterialIconTextExt Kind=Play, Text=Play}" />
+    </Grid>
+</UserControl> 
