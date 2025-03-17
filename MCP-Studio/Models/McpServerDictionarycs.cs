@@ -1,4 +1,7 @@
-﻿using System;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using MCP_Studio.ViewModels;
+using McpDotNet.Protocol.Types;
+using System;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
@@ -13,11 +16,17 @@ namespace MCP_Studio.Models
         public string Args { get; set; }
     }
 
-    public class MCPServerConfig
+    public partial class MCPServerConfig:ViewModelBase
     {
-        public string Name {  get; set; }
-        public string Command { get; set; }
-        public string Args { get; set; }
+        [ObservableProperty]
+        private string name;
+
+        [ObservableProperty]
+        private string command;
+        [ObservableProperty]
+        private string args;
+        [ObservableProperty]
+        private List<Tool> tools;
     }
 
     public class McpServerDictionary
