@@ -7,8 +7,23 @@
              x:Class="MCP_Studio.Views.MCPSettingsView"
 			 x:DataType="vm:MCPSettingsViewModel">
 
-	<Grid>
-		<Button Content="测试" 
-				Command="{Binding TestCommand}"></Button>
+	<Design.DataContext>
+		<vm:MCPSettingsViewModel />
+	</Design.DataContext>
+
+	<Grid RowDefinitions="Auto,*" Margin="20">
+		<TextBlock Grid.Row="0" Text="MCP Server Configurations" FontSize="20" FontWeight="Bold" Margin="0,0,0,20"/>
+
+		<ListBox Grid.Row="1" ItemsSource="{Binding ServerList}">
+			<ListBox.ItemTemplate>
+				<DataTemplate>
+					<StackPanel Orientation="Vertical">
+						<TextBlock Text="{Binding Name}"/>
+						<TextBlock Text="{Binding Command}"/>
+						<TextBlock Text="{Binding Args}"/>
+					</StackPanel>					
+				</DataTemplate>
+			</ListBox.ItemTemplate>
+		</ListBox>
 	</Grid>
 </UserControl>

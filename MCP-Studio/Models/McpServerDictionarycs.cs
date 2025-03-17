@@ -1,12 +1,28 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Text.Json.Serialization;
 
-namespace MCP-Studio.Models
+namespace MCP_Studio.Models
 {
-    class McpServerDictionarycs
+    public class ServerConfig
     {
+        [JsonPropertyName("command")]
+        public string Command { get; set; }
+
+        [JsonPropertyName("args")]
+        public string Args { get; set; }
+    }
+
+    public class MCPServerConfig
+    {
+        public string Name {  get; set; }
+        public string Command { get; set; }
+        public string Args { get; set; }
+    }
+
+    public class McpServerDictionary
+    {
+        [JsonPropertyName("mcpServers")]
+        public Dictionary<string, ServerConfig> Servers { get; set; } = new Dictionary<string, ServerConfig>();
     }
 }

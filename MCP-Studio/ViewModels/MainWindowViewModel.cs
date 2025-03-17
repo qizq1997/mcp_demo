@@ -7,7 +7,7 @@ namespace MCP_Studio.ViewModels;
 public partial class MainWindowViewModel : ViewModelBase
 {
     [ObservableProperty]
-    private ViewModelBase _currentPage;
+    private ViewModelBase currentPage;
 
     public MainWindowViewModel()
     {
