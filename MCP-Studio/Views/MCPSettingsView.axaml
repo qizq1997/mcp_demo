@@ -12,9 +12,6 @@
 	</Design.DataContext>
  
 	<Grid RowDefinitions="Auto,*" Margin="20">
-		<Button Content="Test"
-				Command="{Binding TestCommand}"
-				Grid.Row="0"/>	
 		<TextBlock Grid.Row="0" Text="MCP Server Configurations" FontSize="20" FontWeight="Bold" Margin="0,0,0,20"/>
 		<ListBox Grid.Row="1" ItemsSource="{Binding ServerList}">
 			<ListBox.ItemTemplate>
@@ -27,8 +24,10 @@
 							<ListBox.ItemTemplate>
 								<DataTemplate>
 									<StackPanel Orientation="Horizontal">
-										<TextBlock Text="{Binding Name}"/>
-										<TextBlock Text="{Binding Description}"/>
+										<Label Content="工具名：" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+										<TextBlock Text="{Binding Name}" Margin="10" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+										<Label Content="描述：" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+										<TextBlock Text="{Binding Description}" Margin="10" VerticalAlignment="Center" HorizontalAlignment="Center"/>
 									</StackPanel>
 								</DataTemplate>
 							</ListBox.ItemTemplate>
