@@ -83,6 +83,15 @@ public partial class ChatViewModel : ViewModelBase
     [RelayCommand]
     private async Task SendMessage(string message)
     {
+        if(Messages.Count == 0)
+        {
+            Messages =
+               [
+               // Add a system message
+               new(ChatRole.System, "You are a helpful assistant, helping us test MCP server functionality."),
+                ];
+        }
+
         MessageInfos.Add(new("User", message));
         Messages.Add(new(ChatRole.User, message));
     
@@ -115,6 +124,13 @@ public partial class ChatViewModel : ViewModelBase
             MessageInfos.Add(messageInfo);
         }
         MessageInfos.Add(new("Assistant", response.Text));
+    }
+
+    [RelayCommand]
+    private void ClearMessages()
+    {
+        MessageInfos.Clear();
+        Messages.Clear();
     }
 
     [RelayCommand]

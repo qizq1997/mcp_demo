@@ -51,10 +51,15 @@
 			<TextBox Grid.Column="0" 
 					 x:Name="MyTextBox"
 					 Margin="5"/>
-			<Button Grid.Column="1"
-					Content="问AI"
-					Command="{Binding SendMessageCommand}"
-					CommandParameter="{Binding Text, ElementName=MyTextBox}"/>
+			<StackPanel  Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center">
+				<Button Content="问AI"
+						Command="{Binding SendMessageCommand}"
+						CommandParameter="{Binding Text, ElementName=MyTextBox}"
+						Margin="5"/>
+				<Button Content="清空"
+						Command="{Binding ClearMessagesCommand}"
+						Margin="5"/>
+			</StackPanel>	
 		</Grid>
 	</Grid>
 </UserControl> 
