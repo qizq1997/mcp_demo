@@ -103,7 +103,7 @@ public partial class MCPSettingsViewModel : ViewModelBase
             var client = await factory.GetClientAsync(server.Name);
             var listToolsResult = await client.ListToolsAsync();
             server.Tools = listToolsResult.Tools;
-        }
+        }  
     }
 
     [RelayCommand]

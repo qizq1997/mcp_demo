@@ -16,7 +16,7 @@ public class ViewLocator : IDataTemplate
         var name = param.GetType().FullName!.Replace("ViewModel", "View", StringComparison.Ordinal);
         var type = Type.GetType(name);
 
-        if (type != null)
+        if (type != null && name.Contains("View"))
         {
             return (Control)Activator.CreateInstance(type)!;
         }
