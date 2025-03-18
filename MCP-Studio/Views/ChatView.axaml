@@ -7,8 +7,37 @@
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="MCP_Studio.Views.ChatView"
              x:DataType="vm:ChatViewModel">
-    <Grid>      
-		<Button Content="{materialIcons:MaterialIconTextExt Kind=Play, Text=Play}"
-				Command="{Binding TestCommand}"/>
-    </Grid>
+	<Grid>
+		<Grid.RowDefinitions>
+			<RowDefinition Height="5*"/>
+			<RowDefinition Height="*"/>
+		</Grid.RowDefinitions>
+
+		<Grid Grid.Row="0">
+			<ListBox ItemsSource="{Binding Messages}">
+				<ListBox.ItemTemplate>
+					<DataTemplate>
+						<StackPanel Orientation="Vertical">
+							<TextBlock Text="{Binding Role}"/>
+							<TextBlock Text="{Binding Text}"/>						
+						</StackPanel>
+					</DataTemplate>
+				</ListBox.ItemTemplate>
+			</ListBox>
+		</Grid>
+
+		<Grid Grid.Row="1">
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="*"/>
+				<ColumnDefinition Width="Auto"/>
+			</Grid.ColumnDefinitions>
+			<TextBox Grid.Column="0" 
+					 x:Name="MyTextBox"
+					 Margin="5"/>
+			<Button Grid.Column="1"
+					Content="问AI"
+					Command="{Binding SendMessageCommand}"
+					CommandParameter="{Binding Text, ElementName=MyTextBox}"/>
+		</Grid>
+	</Grid>
 </UserControl> 

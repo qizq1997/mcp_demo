@@ -13,14 +13,80 @@ using Tmds.DBus.Protocol;
 using System.Threading.Tasks;
 using MCP_Studio.Service;
 using System.Linq;
+using System.Collections.ObjectModel;
+using McpDotNet.Protocol.Types;
 
 namespace MCP_Studio.ViewModels;
 
 public partial class ChatViewModel : ViewModelBase
 {
+    public ChatModelConfig? ChatModelConfig { get; set; }
+    public ObservableCollection<Microsoft.Extensions.AI.ChatMessage>? Messages { get; set; }
+    public IChatClient? ChatClient {  get; set; }
+    public List<AITool>? Tools { get; set; }
     public ChatViewModel()
     {
-        
+        InitializeAsync();
+    }
+
+    private async void InitializeAsync()
+    {
+        LoadSettings();
+        await LoadAvailableTools();
+    }
+
+    private void LoadSettings()
+    {
+        try
+        {
+            string jsonString = File.ReadAllText("ChatModelSettings.json");
+            ChatModelConfig = JsonSerializer.Deserialize<ChatModelConfig>(jsonString);
+
+            if (ChatModelConfig == null)
+            {
+                throw new InvalidOperationException("ChatModelConfig is null after deserialization.");
+            }
+
+            ApiKeyCredential apiKeyCredential = new ApiKeyCredential(ChatModelConfig.ApiKey);
+
+            OpenAIClientOptions openAIClientOptions = new OpenAIClientOptions();
+            openAIClientOptions.Endpoint = new Uri(ChatModelConfig.BaseURL);
+
+            IChatClient openaiClient = new OpenAIClient(apiKeyCredential, openAIClientOptions)
+                .AsChatClient(ChatModelConfig.ModelID);
+
+            // Note: To use the ChatClientBuilder you need to install the Microsoft.Extensions.AI package
+            ChatClient = new ChatClientBuilder(openaiClient)
+               .UseFunctionInvocation()
+               .Build(); 
+
+            Messages =
+               [
+               // Add a system message
+               new(ChatRole.System, "You are a helpful assistant, helping us test MCP server functionality."),
+                ];
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error parsing settings: {ex.Message}");
+        }
+    }
+
+    private async Task LoadAvailableTools()
+    {
+        Tools = await MCPService.GetToolsAsync();
+    }
+
+    [RelayCommand]
+    private async Task SendMessage(string message)
+    {
+        Messages.Add(new(ChatRole.User, message));
+    
+        var response = await ChatClient.GetResponseAsync(
+               Messages,
+               new() { Tools = Tools });
+
+        Messages.AddMessages(response);
     }
 
     [RelayCommand]
@@ -58,8 +124,6 @@ public partial class ChatViewModel : ViewModelBase
             var response = await chatClient.GetResponseAsync(
                    messages,
                    new() { Tools = tools });
-
-            // 修复中文乱码问题
 
             messages.AddMessages(response);
             var toolUseMessage = response.Messages.Where(m => m.Role == ChatRole.Tool);
