@@ -21,7 +21,8 @@ namespace MCP_Studio.ViewModels;
 public partial class ChatViewModel : ViewModelBase
 {
     public ChatModelConfig? ChatModelConfig { get; set; }
-    public ObservableCollection<Microsoft.Extensions.AI.ChatMessage>? Messages { get; set; }
+    public ObservableCollection<MessageInfo>? MessageInfos { get; set; }
+    public List<Microsoft.Extensions.AI.ChatMessage>? Messages {  get; set; }
     public IChatClient? ChatClient {  get; set; }
     public List<AITool>? Tools { get; set; }
     public ChatViewModel()
@@ -65,6 +66,8 @@ public partial class ChatViewModel : ViewModelBase
                // Add a system message
                new(ChatRole.System, "You are a helpful assistant, helping us test MCP server functionality."),
                 ];
+
+            MessageInfos = new ObservableCollection<MessageInfo>();
         }
         catch (Exception ex)
         {
@@ -80,6 +83,7 @@ public partial class ChatViewModel : ViewModelBase
     [RelayCommand]
     private async Task SendMessage(string message)
     {
+        MessageInfos.Add(new("User", message));
         Messages.Add(new(ChatRole.User, message));
     
         var response = await ChatClient.GetResponseAsync(
@@ -87,6 +91,30 @@ public partial class ChatViewModel : ViewModelBase
                new() { Tools = Tools });
 
         Messages.AddMessages(response);
+
+        var toolUseMessages = response.Messages.Where(m => m.Role == ChatRole.Tool);
+
+        if (response.Messages[0].Contents.Count > 1)
+        {
+            var functionCall = (FunctionCallContent)response.Messages[0].Contents[1];         
+            string arguments = "";
+            MessageInfo messageInfo = new MessageInfo();
+            if (functionCall.Arguments != null)
+            {
+                foreach (var arg in functionCall.Arguments)
+                {
+                    arguments += $"{arg.Key}:{arg.Value};";
+                }
+                messageInfo.FunctionCallInfo = $"调用函数名:{functionCall.Name};参数信息：{arguments}";
+                foreach (var toolUseMessage in toolUseMessages)
+                {
+                    var functionResultContent = (FunctionResultContent)toolUseMessage.Contents[0];               
+                    messageInfo.FunctionCallResult = $"调用工具结果：{functionResultContent.Result}";
+                }
+            } 
+            MessageInfos.Add(messageInfo);
+        }
+        MessageInfos.Add(new("Assistant", response.Text));
     }
 
     [RelayCommand]

@@ -4,23 +4,40 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 			 xmlns:materialIcons="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
              xmlns:vm="using:MCP_Studio.ViewModels"
+			 xmlns:models="using:MCP_Studio.Models"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="MCP_Studio.Views.ChatView"
              x:DataType="vm:ChatViewModel">
+	<UserControl.Resources>
+		<DataTemplate x:Key="CommanMessageInfoTemplate" DataType="models:MessageInfo">
+			<StackPanel>
+				<TextBlock Text="{Binding Role}"/>
+				<TextBlock Text="{Binding Text}"/>
+			</StackPanel>
+		</DataTemplate>
+		<DataTemplate x:Key="FunctionCallMessageInfoTemplate" DataType="models:MessageInfo">
+			<StackPanel>
+				<TextBlock Text="{Binding FunctionCallInfo}"/>
+				<TextBlock Text="{Binding FunctionCallResult}"/>
+			</StackPanel>
+		</DataTemplate>
+	</UserControl.Resources>
 	<Grid>
 		<Grid.RowDefinitions>
 			<RowDefinition Height="5*"/>
 			<RowDefinition Height="*"/>
 		</Grid.RowDefinitions>
 
-		<Grid Grid.Row="0">
-			<ListBox ItemsSource="{Binding Messages}">
+		<Grid Grid.Row="0">			
+			<ListBox ItemsSource="{Binding MessageInfos}">
 				<ListBox.ItemTemplate>
-					<DataTemplate>
-						<StackPanel Orientation="Vertical">
-							<TextBlock Text="{Binding Role}"/>
-							<TextBlock Text="{Binding Text}"/>						
-						</StackPanel>
+					<DataTemplate>											
+							<StackPanel >
+								<TextBlock Text="{Binding Role}"/>
+								<TextBlock Text="{Binding Text}"/>
+								<TextBlock Text="{Binding FunctionCallInfo}"/>
+								<TextBlock Text="{Binding FunctionCallResult}"/>
+							</StackPanel>
 					</DataTemplate>
 				</ListBox.ItemTemplate>
 			</ListBox>
