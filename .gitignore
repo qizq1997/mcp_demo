@@ -330,3 +330,4 @@ ASALocalRun/
 **/obj/
 **/.vs/
 .env
+MCP-Studio/ChatModelSettings.json

@@ -7,13 +7,8 @@
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="MCP_Studio.Views.ChatView"
              x:DataType="vm:ChatViewModel">
-    <Grid>
-        <TextBlock Text="Chat Page"
-                 FontSize="24"
-                 HorizontalAlignment="Center"
-                 VerticalAlignment="Center"/>
-		<!--<materialIcons:MaterialIcon Kind="Abacus" />-->
-		<!--<Button Content="{materialIcons:MaterialIconExt Kind=Abacus}" />-->
-		<Button Content="{materialIcons:MaterialIconTextExt Kind=Play, Text=Play}" />
+    <Grid>      
+		<Button Content="{materialIcons:MaterialIconTextExt Kind=Play, Text=Play}"
+				Command="{Binding TestCommand}"/>
     </Grid>
 </UserControl> 

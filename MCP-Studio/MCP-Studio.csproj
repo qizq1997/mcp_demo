@@ -13,10 +13,14 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="ChatModelSettings.json" />
     <None Remove="mcp_settings.json" />
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Include="ChatModelSettings.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
     <EmbeddedResource Include="mcp_settings.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
