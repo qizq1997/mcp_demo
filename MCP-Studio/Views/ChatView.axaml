@@ -29,7 +29,7 @@
 		</Grid.RowDefinitions>
 
 		<Grid Grid.Row="0">			
-			<ListBox ItemsSource="{Binding MessageInfos}">
+			<ListBox ItemsSource="{Binding MessageInfos}" ScrollViewer.HorizontalScrollBarVisibility="Auto">
 				<ListBox.ItemTemplate>
 					<DataTemplate>											
 							<StackPanel >
