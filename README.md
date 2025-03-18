@@ -1,231 +1,76 @@
-# 使用C#创建一个MCP客户端
+# 使用Avalonia/C#构建一个简易的跨平台MCP客户端
 
 ## 前言
 
-网上使用Python创建一个MCP客户端的教程已经有很多了，而使用C#创建一个MCP客户端的教程还很少。
+前几天介绍了在C#中构建一个MCP客户端。
 
-为什么要创建一个MCP客户端呢？
+最近正在学习Avalonia，所以就想用Avalonia实现一个简易的跨平台MCP客户端。接入别人写的或者自己写的MCP服务器就可以利用AI做很多有意思的事情。
 
-创建了一个MCP客户端之后，你就可以使用别人写好的一些MCP服务了。
+接下来我有时间也会和大家继续分享一些好玩的MCP服务器。
 
-## 效果展示
+## 效果
 
-为了方便大家复现，我没有使用WPF/Avalonia之类的做界面。只是一个简单的控制台程序，可以很容易看懂。
+展示连接的MCP服务器的工具：
 
-![image-20250314173410130](https://mingupupup.oss-cn-wuhan-lr.aliyuncs.com/imgs/image-20250314173410130.png)
+![image-20250318174336737](https://mingupupup.oss-cn-wuhan-lr.aliyuncs.com/imgs/image-20250318174336737.png)
 
-接入了fetch_mcp可以实现获取网页内容了，使用的模型只要具有tool use能力的应该都可以。
+使用这些MCP服务器：
 
-我使用的是Qwen/Qwen2.5-72B-Instruct。
+duckduckgo_mcp
 
-## 开始实践
+![image-20250318174522899](https://mingupupup.oss-cn-wuhan-lr.aliyuncs.com/imgs/image-20250318174522899.png)
 
-主要使用的包如下所示：
+fetch-mcp
 
-![image-20250314173634157](https://mingupupup.oss-cn-wuhan-lr.aliyuncs.com/imgs/image-20250314173634157.png)
+![image-20250318175233774](https://mingupupup.oss-cn-wuhan-lr.aliyuncs.com/imgs/image-20250318175233774.png)
 
-首先获取MCP服务器：
+sqlite-mcp
 
-```csharp
- private static async Task<IMcpClient> GetMcpClientAsync()
- {
-     DotEnv.Load();
-     var envVars = DotEnv.Read();
-     McpClientOptions options = new()
-     {
-         ClientInfo = new() { Name = "SimpleToolsConsole", Version = "1.0.0" }
-     };
+![image-20250318175711695](https://mingupupup.oss-cn-wuhan-lr.aliyuncs.com/imgs/image-20250318175711695.png)
 
-     var config = new McpServerConfig
-     {
-         Id = "test",
-         Name = "Test",
-         TransportType = TransportTypes.StdIo,
-         TransportOptions = new Dictionary<string, string>
-         {
-             ["command"] = envVars["MCPCommand"],
-             ["arguments"] = envVars["MCPArguments"],
-         }
-     };
+由于模型的原因有时候可能没法一次就成功。
 
-     var factory = new McpClientFactory(
-         new[] { config },
-         options,
-         NullLoggerFactory.Instance
-     );
+问AI这个问题：“获取products表中所有保质期大于30天的商品信息”。
 
-     return await factory.GetClientAsync("test");
- }
+![image-20250318180038096](https://mingupupup.oss-cn-wuhan-lr.aliyuncs.com/imgs/image-20250318180038096.png)
+
+![image-20250318180054915](https://mingupupup.oss-cn-wuhan-lr.aliyuncs.com/imgs/image-20250318180054915.png)
+
+中文显示还有问题，但是数据确实是从数据库中读取出来的了。
+
+## 实践
+
+```cmd
+git clone https://github.com/Ming-jiayou/mcp_demo.git
 ```
 
-写死的话就是这样写：
+进入mcp_demo\MCP-Studio文件夹，将ChatModelSettings.json.example修改为ChatModelSettings.json，填入大模型信息，以硅基流动为例：
 
-```csharp
- private static async Task<IMcpClient> GetMcpClientAsync()
- {
-     DotEnv.Load();
-     var envVars = DotEnv.Read();
-     McpClientOptions options = new()
-     {
-         ClientInfo = new() { Name = "SimpleToolsConsole", Version = "1.0.0" }
-     };
+![image-20250318181015554](https://mingupupup.oss-cn-wuhan-lr.aliyuncs.com/imgs/image-20250318181015554.png)
 
-     var config = new McpServerConfig
-     {
-         Id = "test",
-         Name = "Test",
-         TransportType = TransportTypes.StdIo,
-         TransportOptions = new Dictionary<string, string>
-         {
-             ["command"] = node,
-             ["arguments"] = D:/Learning/AI-related/fetch-mcp/dist/index.js,
-         }
-     };
+打开mcp_settings.json设置你的MCP服务器，我的示例如下所示：
 
-     var factory = new McpClientFactory(
-         new[] { config },
-         options,
-         NullLoggerFactory.Instance
-     );
+![image-20250318181133621](https://mingupupup.oss-cn-wuhan-lr.aliyuncs.com/imgs/image-20250318181133621.png)
 
-     return await factory.GetClientAsync("test");
- }
-```
+运行程序。
 
-重点在：
+在MCPSettings页如果能显示MCP服务器的工具，说明服务器连接成功。
 
-```csharp
- TransportOptions = new Dictionary<string, string>
-         {
-             ["command"] = node,
-             ["arguments"] = D:/Learning/AI-related/fetch-mcp/dist/index.js,
-         }
-```
+![image-20250318181230749](https://mingupupup.oss-cn-wuhan-lr.aliyuncs.com/imgs/image-20250318181230749.png)
 
-用于连接你想连接的MCP服务器。
+现在就可以玩耍这些MCP服务器咯，不过要注意得用一个有工具调用能力的模型哦！！
 
-如果能正确显示你连接mcp服务器提供的工具，说明连接成功。
+全部代码已经放到GitHub，地址：https://github.com/Ming-jiayou/mcp_demo。
 
-```csharp
-  var listToolsResult = await client.ListToolsAsync();
-  var mappedTools = listToolsResult.Tools.Select(t => t.ToAITool(client)).ToList();
-  Console.WriteLine("Tools available:");
-  foreach (var tool in mappedTools)
-  {
-      Console.WriteLine("  " + tool);
-  }
-```
+**推荐阅读**
 
-![image-20250314174210161](https://mingupupup.oss-cn-wuhan-lr.aliyuncs.com/imgs/image-20250314174210161.png)
+[使用C#创建一个MCP客户端](https://mp.weixin.qq.com/s/Jd6irZiwKuRn3IselQAhNQ)
 
-开启一个聊天循环：
+[一起来玩mcp_server_sqlite，让AI帮你做增删改查！！](https://mp.weixin.qq.com/s/dASBZQfC3aWsw_85V2tn-g)
 
-```csharp
-    Console.WriteLine("\nMCP Client Started!");
-    Console.WriteLine("Type your queries or 'quit' to exit.");
+[通过fetch_mcp，让Cline能够获取网页内容。](https://mp.weixin.qq.com/s/iG2cFhYf0tAqQTxfKtlsQw)
 
-    ChatDemo chatDemo = new ChatDemo();
+[创建一个MCP服务器，并在Cline中使用，增强自定义功能。](https://mp.weixin.qq.com/s/nkJ3pqvsBX7HQEkTVI0Fvw)
 
-    while (true)
-    {
-        try
-        {
-            Console.ForegroundColor = ConsoleColor.DarkYellow;
-            Console.Write("\nQuery: ");
-            string query = Console.ReadLine()?.Trim() ?? string.Empty;
 
-            if (query.ToLower() == "quit")
-                break;
-            if (query.ToLower() == "clear")
-            {
-                Console.Clear();
-                chatDemo.Messages.Clear();                    
-            }
-            else 
-            {
-                string response = await chatDemo.ProcessQueryAsync(query, mappedTools);
-                Console.ForegroundColor = ConsoleColor.DarkYellow;
-                Console.WriteLine($"AI回答：{response}");
-                Console.ForegroundColor = ConsoleColor.White;
-            }                      
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"\nError: {ex.Message}");
-        }
-    }
-}
-```
 
-处理每次询问：
-
-```csharp
- public async Task<string> ProcessQueryAsync(string query, List<AITool> tools)
- {
-     if(Messages.Count == 0)
-     {
-         Messages =
-         [
-          // Add a system message
-         new(ChatRole.System, "You are a helpful assistant, helping us test MCP server functionality."),
-         ];
-     }
-     
-     // Add a user message
-     Messages.Add(new(ChatRole.User, query));
-
-     var response = await ChatClient.GetResponseAsync(
-            Messages,
-            new() { Tools = tools });
-     Messages.AddMessages(response);
-     var toolUseMessage = response.Messages.Where(m => m.Role == ChatRole.Tool);
-
-     if (toolUseMessage.Count() > 0)
-     {
-         var functionMessage = response.Messages.Where(m => m.Text == "").First();             
-         var functionCall = (FunctionCallContent)functionMessage.Contents[1];
-         Console.ForegroundColor = ConsoleColor.Green;
-         string arguments = "";
-         foreach (var arg in functionCall.Arguments)
-         {
-             arguments += $"{arg.Key}:{arg.Value};";
-         }
-         Console.WriteLine($"调用函数名:{functionCall.Name};参数信息：{arguments}");
-         foreach (var message in toolUseMessage)
-         {
-             var functionResultContent = (FunctionResultContent)message.Contents[0];
-             Console.WriteLine($"调用工具结果：{functionResultContent.Result}");
-         }
-
-         Console.ForegroundColor = ConsoleColor.White;
-     }
-     else
-     {
-         Console.ForegroundColor = ConsoleColor.Green;
-         Console.WriteLine("本次没有调用工具");
-         Console.ForegroundColor = ConsoleColor.White;
-     }
-
-     return response.Text;
- }
-```
-
-代码已经放到GitHub，地址：https://github.com/Ming-jiayou/mcp_demo。
-
-将.env-example修改为.env应该就可以运行，如果报错，设置成嵌入的资源即可。
-
-.env配置示例：
-
-```csharp
-API_KEY=sk-xxx
-BaseURL=https://api.siliconflow.cn/v1
-ModelID=Qwen/Qwen2.5-72B-Instruct
-MCPCommand=node
-MCPArguments=D:/Learning/AI-related/fetch-mcp/dist/index.js
-```
-
-## 最后
-
-对C#使用MCP感兴趣的朋友可以关注这个项目：https://github.com/PederHP/mcpdotnet。
-
-有问题欢迎一起交流学习。

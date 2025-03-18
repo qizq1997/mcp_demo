@@ -15,6 +15,7 @@ using MCP_Studio.Service;
 using System.Linq;
 using System.Collections.ObjectModel;
 using McpDotNet.Protocol.Types;
+using System.Text;
 
 namespace MCP_Studio.ViewModels;
 
@@ -117,7 +118,8 @@ public partial class ChatViewModel : ViewModelBase
                 messageInfo.FunctionCallInfo = $"调用函数名:{functionCall.Name};参数信息：{arguments}";
                 foreach (var toolUseMessage in toolUseMessages)
                 {
-                    var functionResultContent = (FunctionResultContent)toolUseMessage.Contents[0];               
+                    var functionResultContent = (FunctionResultContent)toolUseMessage.Contents[0];
+
                     messageInfo.FunctionCallResult = $"调用工具结果：{functionResultContent.Result}";
                 }
             } 
