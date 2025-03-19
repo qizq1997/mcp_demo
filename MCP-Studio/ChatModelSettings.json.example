@@ -1,0 +1,5 @@
+﻿{
+  "ModelID": "Qwen/Qwen2.5-72B-Instruct",
+  "ApiKey": "",
+  "BaseURL": "https://api.siliconflow.cn/v1"
+}
