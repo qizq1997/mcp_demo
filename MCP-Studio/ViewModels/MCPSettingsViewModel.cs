@@ -1,25 +1,20 @@
-﻿using CommunityToolkit.Mvvm.Input;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Text.Json;
 using System.IO;
-using System.Text.Json.Serialization;
-using MCP_Studio.Models;
+using System.Linq;
+using System.Text.Json;
+using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
-using Avalonia.Styling;
+using CommunityToolkit.Mvvm.Input;
+using MCP_Studio.Models;
+using McpDotNet.Client;
 using McpDotNet.Configuration;
+using McpDotNet.Extensions.AI;
 using McpDotNet.Protocol.Transport;
 using McpDotNet.Protocol.Types;
-using McpDotNet.Client;
-using Microsoft.Extensions.Options;
-using Microsoft.Extensions.Logging.Abstractions;
-using McpDotNet.Extensions.AI;
 using Microsoft.Extensions.AI;
+using Microsoft.Extensions.Logging.Abstractions;
 
 namespace MCP_Studio.ViewModels;
 
