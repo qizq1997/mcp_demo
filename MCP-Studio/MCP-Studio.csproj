@@ -13,14 +13,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Remove="ChatModelSettings.json" />
     <None Remove="mcp_settings.json" />
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="ChatModelSettings.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </EmbeddedResource>
     <EmbeddedResource Include="mcp_settings.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
@@ -43,5 +39,11 @@
     <PackageReference Include="McpDotNet.Extensions.AI" Version="1.1.0.1" />
     <PackageReference Include="Microsoft.Extensions.AI" Version="9.3.0-preview.1.25161.3" />
     <PackageReference Include="Microsoft.Extensions.AI.OpenAI" Version="9.3.0-preview.1.25161.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="ChatModelSettings.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 </Project>
